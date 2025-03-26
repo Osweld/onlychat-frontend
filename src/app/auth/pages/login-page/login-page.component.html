@@ -1,0 +1,57 @@
+<section class="min-h-screen w-full">
+  <div class="flex flex-col md:flex-row min-h-screen">
+    <div class="hidden md:block md:w-1/2 lg:w-3/5 relative">
+      <div
+        class="absolute inset-0 bg-gradient-to-bl from-green-200 via-emerald-400 to-teal-600"
+      ></div>
+      <div class="absolute bottom-5 left-5 text-white p-4">
+        <h1 class="text-6xl lg:text-8xl font-bold mb-4">OnlyChat</h1>
+        <p class="text-xl lg:text-2xl font-medium">
+          Connect with friends and family through instant messaging in a secure
+          environment.
+        </p>
+      </div>
+    </div>
+
+    <div class="w-full md:w-1/2 flex flex-col justify-center items-center px-4 py-8 md:px-8 lg:px-12">
+
+        <div class="md:hidden mb-8 text-center">
+            <h1 class="text-3xl font-bold text-emerald-600">OnlyChat</h1>
+            <p class="text-gray-600 mt-2">Connect and chat instantly</p>
+        </div>
+
+        <div class="w-full max-w-lg">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white text-center">Welcome Back</h2>
+
+            <p-card styleClass="shadow-lg border-0 overflow-hidden">
+                <form class="space-y-5">
+                    <div class="px-5">
+                        <label for="email" class="block font-medium">Email Address:</label>
+                        <input type="text" id="email" pInputText class="w-full mt-1" />
+                    </div>
+
+                    <div class="px-5">
+                        <label for="password" class="block font-medium">Password:</label>
+                        <input type="password" id="password" pInputText class="w-full mt-1" />
+                    </div>
+
+                    <div class="px-5">
+                        <p-button type="submit" label="Sign In" styleClass="w-full p-button-raised p-button-primary"></p-button>
+                    </div>
+
+                    <div class="px-5 text-center text-sm">
+                        <a href="#" class="text-emerald-600">Forgot Password?</a>
+                    </div>
+                    <div class="px-10">
+                        <p-divider ></p-divider>
+                    </div>
+                    
+                    <div class="px-5 text-center">
+                       <p-button label="Create Account" styleClass="p-button-text w-full"></p-button>
+                    </div>
+                </form>
+            </p-card>
+        </div>
+    </div>
+  </div>
+</section>
