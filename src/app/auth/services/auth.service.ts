@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
-import { LoginCredentials, LoginResponse } from '../interfaces/auth.interface';
+import { LoginCredentials, LoginResponse, SignupCredentials, SignupResponse } from '../interfaces/auth.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -21,5 +21,13 @@ export class AuthService {
 
   forgotPassword(email: string) {
     return this.http.get(this.URL + '/reset-password', {params: {email}});
+  }
+
+  resetPassword(token: string, password: string) {
+    return this.http.post(this.URL + '/reset-password', {token, password});
+  }
+
+  register(signupCredentials: SignupCredentials) {
+    return this.http.post<SignupResponse>(this.URL + '/signup', signupCredentials);
   }
 }
