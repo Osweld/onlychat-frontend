@@ -1,5 +1,5 @@
 import { ToastService } from './../../../shared/services/toast.service';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnDestroy, signal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
@@ -10,6 +10,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../../services/auth.service';
 import { LoginCredentials } from '../../interfaces/auth.interface';
 import { ForgotPasswordDialogComponent } from '../../components/forgot-password-dialog/forgot-password-dialog.component';
+import { Subject, takeUntil } from 'rxjs';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
@@ -21,15 +23,18 @@ import { ForgotPasswordDialogComponent } from '../../components/forgot-password-
     DividerModule,
     MessageModule,
     ReactiveFormsModule,
-    ForgotPasswordDialogComponent
+    ForgotPasswordDialogComponent,
+    RouterLink
   ],
   templateUrl: './login-page.component.html',
   styles: ``,
 })
-export class LoginPageComponent {
+export class LoginPageComponent implements OnDestroy{
 
   authService = inject(AuthService);
   toastService = inject(ToastService);
+
+  private destroy$ = new Subject<void>();
 
 
   loginLoading = signal(false);
@@ -75,7 +80,7 @@ export class LoginPageComponent {
       password: this.loginForm.get('password')?.value || '',
     };
 
-    this.authService.login(credentials).subscribe({
+    this.authService.login(credentials).pipe(takeUntil(this.destroy$)).subscribe({
       next: (data) => {
         this.loginLoading.set(false);
         this.setTokenLocalStorage(data.token);
@@ -102,6 +107,11 @@ export class LoginPageComponent {
 
   showForgotPasswordDialog() {
     this.showForgotPassword.set(true);
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 
