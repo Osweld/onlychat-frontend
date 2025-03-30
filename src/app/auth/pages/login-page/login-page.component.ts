@@ -8,10 +8,11 @@ import { CheckboxModule } from 'primeng/checkbox';
 import {MessageModule} from 'primeng/message';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { LoginCredentials } from '../../interfaces/auth.interface';
+import { Error, LoginCredentials } from '../../interfaces/auth.interface';
 import { ForgotPasswordDialogComponent } from '../../components/forgot-password-dialog/forgot-password-dialog.component';
 import { Subject, takeUntil } from 'rxjs';
 import { RouterLink } from '@angular/router';
+import { ResendAccountActivationDialogComponent } from '../../components/resend-account-activation-dialog/resend-account-activation-dialog.component';
 
 @Component({
   selector: 'app-login-page',
@@ -24,6 +25,7 @@ import { RouterLink } from '@angular/router';
     MessageModule,
     ReactiveFormsModule,
     ForgotPasswordDialogComponent,
+    ResendAccountActivationDialogComponent,
     RouterLink
   ],
   templateUrl: './login-page.component.html',
@@ -39,6 +41,7 @@ export class LoginPageComponent implements OnDestroy{
 
   loginLoading = signal(false);
  showForgotPassword = signal(false);
+ showActivateAccount = signal(false);
 
 
   loginForm = new FormGroup({
@@ -86,8 +89,17 @@ export class LoginPageComponent implements OnDestroy{
         this.setTokenLocalStorage(data.token);
       },
       error: (error) => {
-        console.error(error);
-        this.toastService.error(error.error.message || 'Server Error', 'Login Error');
+        const errorMessage:Error = error.error;
+        if( errorMessage.details){
+          if(errorMessage.details.resend) {
+            this.showActivateAccount.set(true);
+            this.toastService.error('Please check your email to activate your account', 'Account Activation');
+            this.loginForm.reset();
+          }
+        }else{
+          this.toastService.error(errorMessage.message || 'Server Error', 'Login Error');
+          
+        }
         this.loginLoading.set(false);
       }
     }
