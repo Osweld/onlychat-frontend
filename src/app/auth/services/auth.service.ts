@@ -30,4 +30,12 @@ export class AuthService {
   register(signupCredentials: SignupCredentials) {
     return this.http.post<SignupResponse>(this.URL + '/signup', signupCredentials);
   }
+
+  activateAccount(token: string) {
+    return this.http.get(this.URL + '/activate-account/' + token);
+  }
+
+  resendActivationEmail(email: string) {
+    return this.http.post(this.URL + '/resend-activate-account-token', {email});
+  }
 }
