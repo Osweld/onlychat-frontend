@@ -25,5 +25,18 @@ export interface SignupResponse {
   userStatus: string;
 }
 
+export interface Error {
+  status:  string;
+  error:   string;
+  message: string;
+  path:    string;
+  details: Details;
+}
+
+export interface Details {
+  resend:  boolean;
+  message: string;
+}
+
 
 
