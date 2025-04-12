@@ -5,13 +5,18 @@ import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { DividerModule } from 'primeng/divider';
 import { CheckboxModule } from 'primeng/checkbox';
-import {MessageModule} from 'primeng/message';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MessageModule } from 'primeng/message';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Error, LoginCredentials } from '../../interfaces/auth.interface';
 import { ForgotPasswordDialogComponent } from '../../components/forgot-password-dialog/forgot-password-dialog.component';
 import { Subject, takeUntil } from 'rxjs';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ResendAccountActivationDialogComponent } from '../../components/resend-account-activation-dialog/resend-account-activation-dialog.component';
 
 @Component({
@@ -26,23 +31,21 @@ import { ResendAccountActivationDialogComponent } from '../../components/resend-
     ReactiveFormsModule,
     ForgotPasswordDialogComponent,
     ResendAccountActivationDialogComponent,
-    RouterLink
+    RouterLink,
   ],
   templateUrl: './login-page.component.html',
   styles: ``,
 })
-export class LoginPageComponent implements OnDestroy{
-
+export class LoginPageComponent implements OnDestroy {
   authService = inject(AuthService);
   toastService = inject(ToastService);
+  route = inject(Router);
 
   private destroy$ = new Subject<void>();
 
-
   loginLoading = signal(false);
- showForgotPassword = signal(false);
- showActivateAccount = signal(false);
-
+  showForgotPassword = signal(false);
+  showActivateAccount = signal(false);
 
   loginForm = new FormGroup({
     username: new FormControl('', [
@@ -60,19 +63,27 @@ export class LoginPageComponent implements OnDestroy{
   loginFormValidationMessages = {
     username: [
       { type: 'required', message: 'Username is required' },
-      { type: 'minlength', message: 'Username must be at least 5 characters long' },
-      { type: 'maxlength', message: 'Username cannot exceed 20 characters' }
+      {
+        type: 'minlength',
+        message: 'Username must be at least 5 characters long',
+      },
+      { type: 'maxlength', message: 'Username cannot exceed 20 characters' },
     ],
     password: [
       { type: 'required', message: 'Password is required' },
-      { type: 'minlength', message: 'Password must be at least 8 characters long' },
-      { type: 'maxlength', message: 'Password cannot exceed 20 characters' }
-    ]
+      {
+        type: 'minlength',
+        message: 'Password must be at least 8 characters long',
+      },
+      { type: 'maxlength', message: 'Password cannot exceed 20 characters' },
+    ],
   };
 
   onSubmit() {
-    if(this.loginForm.invalid) {
-      Object.values(this.loginForm.controls).forEach(control => control.markAsTouched());
+    if (this.loginForm.invalid) {
+      Object.values(this.loginForm.controls).forEach((control) =>
+        control.markAsTouched()
+      );
       return;
     }
 
@@ -83,39 +94,40 @@ export class LoginPageComponent implements OnDestroy{
       password: this.loginForm.get('password')?.value || '',
     };
 
-    this.authService.login(credentials).pipe(takeUntil(this.destroy$)).subscribe({
-      next: (data) => {
-        this.loginLoading.set(false);
-        this.setTokenLocalStorage(data.token);
-      },
-      error: (error) => {
-        const errorMessage:Error = error.error;
-        if( errorMessage.details){
-          if(errorMessage.details.resend) {
-            this.showActivateAccount.set(true);
-            this.toastService.error('Please check your email to activate your account', 'Account Activation');
-            this.loginForm.reset();
+    this.authService
+      .login(credentials)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data) => {
+          this.loginLoading.set(false);
+          this.setTokenLocalStorage(data.token);
+          this.route.navigate(['/chat']);
+        },
+        error: (error) => {
+          const errorMessage: Error = error.error;
+          if (errorMessage.details) {
+            if (errorMessage.details.resend) {
+              this.showActivateAccount.set(true);
+              this.toastService.error(
+                'Please check your email to activate your account',
+                'Account Activation'
+              );
+              this.loginForm.reset();
+            }
+          } else {
+            this.toastService.error(
+              errorMessage.message || 'Server Error',
+              'Login Error'
+            );
           }
-        }else{
-          this.toastService.error(errorMessage.message || 'Server Error', 'Login Error');
-          
-        }
-        this.loginLoading.set(false);
-      }
-    }
-     
-    );
+          this.loginLoading.set(false);
+        },
+      });
   }
-
-
-
- 
-
 
   setTokenLocalStorage(token: string) {
     localStorage.setItem('access_token', token);
   }
-
 
   showForgotPasswordDialog() {
     this.showForgotPassword.set(true);
@@ -125,6 +137,4 @@ export class LoginPageComponent implements OnDestroy{
     this.destroy$.next();
     this.destroy$.complete();
   }
-
-
 }
