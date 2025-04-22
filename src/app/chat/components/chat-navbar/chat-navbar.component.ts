@@ -1,26 +1,91 @@
+
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
+import {
+  AutoCompleteCompleteEvent,
+  AutoCompleteModule,
+  AutoCompleteSelectEvent,
+} from 'primeng/autocomplete';
 import { CardModule } from 'primeng/card';
-import { MenubarModule } from 'primeng/menubar';
-import { InputText } from 'primeng/inputtext';
+import { ChatService } from '../../services/chat.service';
+import { FormsModule } from '@angular/forms';
+import { User } from '../../interfaces/chat.interface';
+import { Router } from '@angular/router';
+import { MobileLayoutService } from '../../services/mobile-layout.service';
 
 @Component({
   selector: 'app-chat-navbar',
-  imports: [MenubarModule, ButtonModule,CardModule,IconFieldModule,IconFieldModule,InputIconModule, InputText],
+  imports: [
+    ButtonModule,
+    CardModule,
+    IconFieldModule,
+    IconFieldModule,
+    InputIconModule,
+    AutoCompleteModule,
+    FormsModule,
+  ],
   templateUrl: './chat-navbar.component.html',
   styles: ``,
 })
 export class ChatNavbarComponent {
 
-  mobileMenuVisible:boolean = false;
-  theme:string = localStorage.getItem('theme') || 'light-mode';
+  private mobileLayoutService = inject(MobileLayoutService);
+  
+  filteredUsers: User[] = [];
+  username: string = '';
+  mobileMenuVisible = signal(false);
+  
+  theme: string = localStorage.getItem('theme') || 'light';
 
-  toggleMobileMenu() {
-    this.mobileMenuVisible = !this.mobileMenuVisible;
+  private chatService = inject(ChatService);
+  private router = inject(Router)
+
+  filterUsers(event: AutoCompleteCompleteEvent) {
+    const query = event.query;
+
+    if (query.length < 3) {
+      this.filteredUsers = [];
+      return;
+    }
+
+    this.chatService.searchUser(query).subscribe({
+      next: (response) => {
+        this.filteredUsers = response.content;
+      },
+      error: (error) => {
+        console.error('Error fetching users:', error);
+        this.filteredUsers = [];
+      },
+    });
   }
 
+  onSelectUser(event: AutoCompleteSelectEvent) {
+    const user: User = event.value;
+
+    if(this.chatService.searchIfChatExists(user.username)){
+      return;
+    }
+    this.chatService.createChat(user.username).subscribe({
+      next: () => {
+        this.username = '';
+        this.filteredUsers = [];
+        this.mobileMenuVisible.set(false);
+      },
+      error: (error) => {
+        console.error('Error creating chat:', error);
+      },
+    });
+
+    this.username = "";
+    this.mobileLayoutService.setListActiveOnMobile(false);  
+    this.toggleMobileMenu();
+  }
+
+  toggleMobileMenu() {
+    this.mobileMenuVisible.set(!this.mobileMenuVisible());
+  }
 
   toggleTheme() {
     const element = document.querySelector('html');
@@ -29,9 +94,14 @@ export class ChatNavbarComponent {
     localStorage.setItem('theme', this.theme);
     if (this.theme === 'dark') {
       element?.classList.add('dark');
-    }else {
+    } else {
       element?.classList.remove('dark');
     }
-}
-  
+  }
+
+
+  logout() {
+    localStorage.removeItem('access_token');
+    this.router.navigate(['/login']);
+  }
 }
