@@ -101,6 +101,7 @@ export class LoginPageComponent implements OnDestroy {
         next: (data) => {
           this.loginLoading.set(false);
           this.setTokenLocalStorage(data.token);
+          this.setUserLocalStorage(data.username);
           this.route.navigate(['/chat']);
         },
         error: (error) => {
@@ -127,6 +128,10 @@ export class LoginPageComponent implements OnDestroy {
 
   setTokenLocalStorage(token: string) {
     localStorage.setItem('access_token', token);
+  }
+
+  setUserLocalStorage(username:string ) {
+    localStorage.setItem('username', username);
   }
 
   showForgotPasswordDialog() {
