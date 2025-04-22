@@ -1,19 +1,57 @@
-<div class="flex flex-col h-full">
-    <div class="border-b border-surface h-20 flex flex-row justify-center items-center min-h-20">
-        <h2 class="text-3xl font-semibold text-primary">Chats</h2>
+<div class="flex flex-col h-full bg-surface-50 dark:bg-surface-900">
+    <!-- Header con búsqueda -->
+    <div class="h-20 flex flex-row justify-between items-center p-4 border-b border-surface">
+        <h2 class="text-2xl font-bold text-primary">Chats</h2>
     </div>
 
-    <div class="flex flex-col h-full overflow-y-auto">
-        <div class="flex flex-row items-center gap-4 p-4 border-b border-surface hover:bg-surface-100 dark:hover:bg-surface-800 transition-all duration-300 ease-in-out cursor-pointer">
-            <div>
-                <p-avatar icon="pi pi-user" class="mr-2" size="large" shape="circle" />
+    <!-- Lista de chats -->
+    @if(chats().length > 0) {
+    <div class="flex flex-col overflow-y-auto flex-1">
+        @for(chat of chats(); track chat.id) {
+        <div class="flex items-center p-3 border-b border-surface hover:bg-surface-100 dark:hover:bg-surface-800 transition-all duration-300 cursor-pointer relative" (click)="selectChat(chat)">
+            <!-- Avatar y estado online -->
+            <div class="relative mr-3">
+                <p-avatar icon="pi pi-user" styleClass="shadow-sm" size="large" shape="circle" />
+                <span class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-surface-50 dark:border-surface-900"></span>
             </div>
-            <div class="flex flex-col min-w-0">
-                <h3 class="text-lg font-bold text-primary">John Doe</h3>
-                <p class="text-sm font-medium truncate">Last message preview is fdjfdjslfjjfsdjfdjfdsjfdsjsjjfdjsj...</p>
+            
+            <!-- Información del chat -->
+            <div class="flex flex-col flex-1 min-w-0">
+                <div class="flex justify-between items-center w-full" >
+                    <h3 class="text-base font-semibold">{{chat.otherUsername}}</h3>
+                    <span class="text-xs text-surface-600 dark:text-surface-400">12:30 PM</span>
+                </div>
+                <div class="flex justify-between items-center w-full">
+                    <p class="text-sm text-surface-600 dark:text-surface-400 truncate pr-2">
+                        Last message preview is something interesting...
+                    </p>
+                    <!-- <p-badge value="3" severity="danger" styleClass="h-5 w-5 flex items-center justify-center"></p-badge> -->
+                </div>
             </div>
         </div>
+        }
     </div>
-   
+    }
     
+    <!-- Estado de carga -->
+    @else {
+
+        @if(isLoading()){
+            <div class="flex flex-col flex-1 items-center justify-center">
+                <div class="flex flex-col items-center gap-4">
+                    <p-progressSpinner styleClass="w-12 h-12"></p-progressSpinner>
+                    <p class="text-surface-500 dark:text-surface-400">Loading chats...</p>
+                </div>
+            </div>
+        } @else {
+            <div class="flex flex-col flex-1 items-center justify-center">
+                <div class="flex flex-col items-center gap-4 max-w-xs text-center px-4">
+                    <i class="pi pi-comments text-5xl text-surface-300 dark:text-surface-600"></i>
+                    <h3 class="text-xl font-medium">No conversations yet</h3>
+                    <p class="text-surface-600 dark:text-surface-400">Start a new conversation by searching for a user</p>
+                </div>
+            </div>
+        }
+   
+    }
 </div>
