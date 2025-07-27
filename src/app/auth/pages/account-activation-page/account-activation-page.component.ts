@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { Subject, takeUntil } from 'rxjs';
@@ -25,6 +25,7 @@ import { ResendAccountActivationDialogComponent } from '../../components/resend-
 export class AccountActivationPageComponent implements OnDestroy {
   private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
+  private router = inject(Router);
 
   showResendActivation = signal(false);
 
@@ -33,16 +34,17 @@ export class AccountActivationPageComponent implements OnDestroy {
   activationState = signal<'loading' | 'success' | 'error'>('loading');
 
   constructor() {
-    this.route.params.pipe(takeUntil(this.destroy$)).subscribe({
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe({
       next: (params) => {
         const token = params['token'];
-        console.log(token);
+        if (!token) {
+          this.router.navigate(['/login']);
+        }
         this.authService.activateAccount(token).subscribe({
           next: () => {
             this.activationState.set('success');
           },
           error: (error) => {
-            console.log(error);
             this.activationState.set('error');
             const errorMessage: Error = error.error;
             if (errorMessage.details.resend) { 

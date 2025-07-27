@@ -1,15 +1,15 @@
 import { inject } from '@angular/core';
 import { Router, type CanActivateFn } from '@angular/router';
-import { JwtHelperService } from '@auth0/angular-jwt';
+import { AuthService } from '../../auth/services/auth.service';
 
 export const redirectIfAuthenticatedGuard: CanActivateFn = (route, state) => {
 
   const token = localStorage.getItem('access_token');
-  const jwtHelper = inject(JwtHelperService);
+  const authService = inject(AuthService);
   const router = inject(Router);
 
 
-  if (token && !jwtHelper.isTokenExpired(token)) {
+  if (token && !authService.isTokenExpired()) {
     router.navigate(['/chat']);
     return false;
   }
