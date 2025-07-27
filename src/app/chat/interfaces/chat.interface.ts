@@ -44,6 +44,9 @@ export interface Chat {
   otherUsername: string;
   name: string;
   id: number;
+  lastMessage: string;
+  lastMessageDate: Date;
+  unreadCount: number;
 }
 
 export interface RecieveChatMessage {
@@ -53,9 +56,31 @@ export interface RecieveChatMessage {
   timestamp: string;
   senderId: number;
   senderUsername: string;
+  isRead: boolean;
 }
 
 export interface SendChatMessage{
     chatId: number;
     message: string;
+    recipientUsername: string;
+}
+
+
+export interface ChatMessagePagination {
+  totalPages: number;
+  totalElements: number;
+  first: boolean;
+  last: boolean;
+  size: number;
+  content: RecieveChatMessage[];
+  number: number;
+  sort: Sort;
+  numberOfElements: number;
+  pageable: Pageable;
+  empty: boolean;
+}
+
+export interface ChatMessageSeen{
+  chatId: number;
+  userId: number;
 }

@@ -1,4 +1,4 @@
-
+import { AuthService } from './../../../auth/services/auth.service';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { Component, inject, signal } from '@angular/core';
@@ -12,8 +12,8 @@ import { CardModule } from 'primeng/card';
 import { ChatService } from '../../services/chat.service';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../interfaces/chat.interface';
-import { Router } from '@angular/router';
 import { MobileLayoutService } from '../../services/mobile-layout.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-chat-navbar',
@@ -25,6 +25,7 @@ import { MobileLayoutService } from '../../services/mobile-layout.service';
     InputIconModule,
     AutoCompleteModule,
     FormsModule,
+    RouterLink
   ],
   templateUrl: './chat-navbar.component.html',
   styles: ``,
@@ -32,6 +33,8 @@ import { MobileLayoutService } from '../../services/mobile-layout.service';
 export class ChatNavbarComponent {
 
   private mobileLayoutService = inject(MobileLayoutService);
+  private chatService = inject(ChatService);
+  private AuthService = inject(AuthService);
   
   filteredUsers: User[] = [];
   username: string = '';
@@ -39,8 +42,7 @@ export class ChatNavbarComponent {
   
   theme: string = localStorage.getItem('theme') || 'light';
 
-  private chatService = inject(ChatService);
-  private router = inject(Router)
+
 
   filterUsers(event: AutoCompleteCompleteEvent) {
     const query = event.query;
@@ -65,22 +67,24 @@ export class ChatNavbarComponent {
     const user: User = event.value;
 
     if(this.chatService.searchIfChatExists(user.username)){
+      this.username = '';
+      this.toggleMobileMenu();
+      this.mobileLayoutService.setMessageViewActiveOnMobile();
       return;
     }
+
     this.chatService.createChat(user.username).subscribe({
       next: () => {
         this.username = '';
         this.filteredUsers = [];
-        this.mobileMenuVisible.set(false);
+       this.toggleMobileMenu();
       },
       error: (error) => {
         console.error('Error creating chat:', error);
       },
     });
 
-    this.username = "";
-    this.mobileLayoutService.setListActiveOnMobile(false);  
-    this.toggleMobileMenu();
+    this.mobileLayoutService.setMessageViewActiveOnMobile();  
   }
 
   toggleMobileMenu() {
@@ -97,11 +101,12 @@ export class ChatNavbarComponent {
     } else {
       element?.classList.remove('dark');
     }
+
+    this.toggleMobileMenu();
   }
 
 
   logout() {
-    localStorage.removeItem('access_token');
-    this.router.navigate(['/login']);
+    this.AuthService.logout();
   }
 }

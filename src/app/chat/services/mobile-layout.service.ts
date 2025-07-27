@@ -1,23 +1,26 @@
-import { Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MobileLayoutService {
 
-  private isListActiveOnMobile = signal(true);
+  private isListActiveOnMobileSignal = signal<boolean>(true);
+  private isMessageActiveOnMobileSignal = signal<boolean>(false);
 
-  get isListActiveOnMobile$() {
-    return this.isListActiveOnMobile.asReadonly();
+  public isListActiveOnMobile = computed(() => this.isListActiveOnMobileSignal());
+  public isMessageActiveOnMobile = computed(() => this.isMessageActiveOnMobileSignal());
+
+  toggleViewActiveOnMobile() {
+    this.isListActiveOnMobileSignal.update((prev) => !prev);
+    this.isMessageActiveOnMobileSignal.update((prev) => !prev);
   }
 
-  toggleListActiveOnMobile() {
-    this.isListActiveOnMobile.update((prev) => !prev);
-  }
-
-  setListActiveOnMobile(value: boolean) {
-    this.isListActiveOnMobile.set(value);
-  }
 
   constructor() { }
+
+  setMessageViewActiveOnMobile() {
+    this.isMessageActiveOnMobileSignal.set(true);
+    this.isListActiveOnMobileSignal.set(false);
+  }
 }

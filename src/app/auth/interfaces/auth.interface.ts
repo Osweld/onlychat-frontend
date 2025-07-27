@@ -16,6 +16,12 @@ export interface SignupCredentials {
     password: string;
 }
 
+export interface ChangePassword {
+  oldPassword: string;
+  newPassword: string;
+}
+
+
 export interface SignupResponse {
   id:         number;
   username:   string;
@@ -36,6 +42,11 @@ export interface Error {
 export interface Details {
   resend:  boolean;
   message: string;
+}
+
+export interface RefreshToken {
+  token:          string;
+  expirationDate: Date;
 }
 
 

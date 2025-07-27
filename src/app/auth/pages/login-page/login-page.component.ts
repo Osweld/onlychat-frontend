@@ -102,19 +102,25 @@ export class LoginPageComponent implements OnDestroy {
           this.loginLoading.set(false);
           this.setTokenLocalStorage(data.token);
           this.setUserLocalStorage(data.username);
+          this.setUserIdLocalStorage(data.id);
+          this.setExpirationLocalStorage(data.expirationDate);
+          if(!this.authService.isTokenExpired()) {
+            this.authService.setupTokenRefresh();
+          }
+          
           this.route.navigate(['/chat']);
         },
         error: (error) => {
+          
           const errorMessage: Error = error.error;
-          if (errorMessage.details) {
-            if (errorMessage.details.resend) {
+          if (errorMessage?.details?.resend) {
+            console.error('Login Error:', error);
               this.showActivateAccount.set(true);
               this.toastService.error(
                 'Please check your email to activate your account',
                 'Account Activation'
               );
               this.loginForm.reset();
-            }
           } else {
             this.toastService.error(
               errorMessage.message || 'Server Error',
@@ -132,6 +138,14 @@ export class LoginPageComponent implements OnDestroy {
 
   setUserLocalStorage(username:string ) {
     localStorage.setItem('username', username);
+  }
+
+  setUserIdLocalStorage(id: number) {
+    localStorage.setItem('userId', id.toString());
+  }
+
+  setExpirationLocalStorage(expiration: Date) {
+    localStorage.setItem('expiration', expiration.toString());
   }
 
   showForgotPasswordDialog() {

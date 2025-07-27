@@ -1,6 +1,7 @@
 import { Toast } from 'primeng/toast';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { AuthService } from './auth/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -10,8 +11,14 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent implements OnInit {
 
+  private authService = inject(AuthService);
+
 
   ngOnInit(){
+
+    if(!this.authService.isTokenExpired()) {
+      this.authService.setupTokenRefresh();
+    }
 
      const theme = localStorage.getItem('theme') || 'light';
 
@@ -26,4 +33,28 @@ export class AppComponent implements OnInit {
     }
 
   }
+
+@HostListener('window:focus')
+onFocus(): void {
+  const expirationDate = this.authService.getExpirationDate();
+  if (expirationDate) {
+    const currentTime = new Date().getTime();
+    const expirationTime = expirationDate.getTime();
+
+    if (currentTime > expirationTime || (expirationTime - currentTime) < 300000) {
+      this.authService.getTokenRefresh().subscribe({
+        next: (response) => {
+        this.authService.refreshToken(response);
+        },
+        error: (error) => {
+          this.authService.logout();
+        },
+      });
+    }
+  }
+  
+}
+
+
+
 }

@@ -6,12 +6,13 @@ import { BadgeModule } from 'primeng/badge';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ChatService } from '../../services/chat.service';
-import { Chat, ChatList } from '../../interfaces/chat.interface';
+import { Chat } from '../../interfaces/chat.interface';
 import { MobileLayoutService } from '../../services/mobile-layout.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-chat-list',
-  imports: [CardModule, ButtonModule,AvatarModule,BadgeModule,ProgressSpinnerModule, SkeletonModule],
+  imports: [CardModule,CommonModule, ButtonModule,AvatarModule,BadgeModule,ProgressSpinnerModule, SkeletonModule],
   templateUrl: './chat-list.component.html',
   styles: ``,
   host: {
@@ -23,9 +24,8 @@ export class ChatListComponent implements OnInit {
 
   private mobileLayoutService = inject(MobileLayoutService);
   private chatService = inject(ChatService);
-  lastMessage = computed(() => this.chatService.currentChatMessages().slice(-1)[0]);
 
-  isActiveOnMobile = computed(() => this.mobileLayoutService.isListActiveOnMobile$());
+  isActiveOnMobile = computed(() => this.mobileLayoutService.isListActiveOnMobile());
   isLoading = signal(true);
  
 
@@ -41,12 +41,13 @@ export class ChatListComponent implements OnInit {
     this.chatService.loadChats()
     setTimeout(() => {
       this.isLoading.set(false);
+      console.log('Chats loaded:', this.chats());
     }, 500);
   }
 
   selectChat(chat: Chat) {
     this.chatService.selectChat(chat.id)
-    this.mobileLayoutService.toggleListActiveOnMobile()
+    this.mobileLayoutService.toggleViewActiveOnMobile()
   }
 
   refreshChats(): void {

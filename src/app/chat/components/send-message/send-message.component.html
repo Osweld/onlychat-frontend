@@ -1,0 +1,18 @@
+<form [formGroup]="sendMessageForm" (ngSubmit)="sendMessage()" class="flex items-center gap-2">
+    <div class="flex-1">
+        <input type="text" formControlName="message" autocomplete="off" pInputText
+            class="w-full pl-3 pr-12 py-2 rounded-full shadow-lg" placeholder="Type a message..." />
+        <div>
+            @for(validation of sendMessageFormValidationMesssages.message; track
+            $index){
+            @if(sendMessageForm.get('message')?.hasError(validation.type) &&
+            (sendMessageForm.get('message')?.dirty ||
+            sendMessageForm.get('message')?.touched)){
+            <p-message size="small" severity="error" variant="simple"
+                text="{{ validation.message }}"></p-message>
+            } }
+        </div>
+    </div>
+    <p-button icon="pi pi-send" type="submit" styleClass="p-button-rounded" [disabled]="sendMessageForm.invalid">
+    </p-button>
+</form>
