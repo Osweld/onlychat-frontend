@@ -1,59 +1,118 @@
-# OnlychatFrontend
+# OnlyChat Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.4.
+Una aplicación de chat moderna y elegante construida con Angular 19.2.4. Esta es la interfaz de usuario para la plataforma OnlyChat que permite a los usuarios comunicarse en tiempo real.
 
-## Development server
+## 🚀 Características
 
-To start a local development server, run:
+- 💬 Chat en tiempo real
+- 🎨 Interfaz moderna y responsiva
+- 🔐 Autenticación de usuarios
+- 📱 Compatible con dispositivos móviles
+- ⚡ Optimizado para rendimiento
+
+## 🛠️ Tecnologías
+
+- **Angular** 19.2.4
+- **TypeScript**
+- **Angular CLI**
+- **Karma** (Testing)
+- **RxJS** (Programación reactiva)
+
+## 📋 Prerrequisitos
+
+Antes de comenzar, asegúrate de tener instalado:
+
+- [Node.js](https://nodejs.org/) (versión 18 o superior)
+- [npm](https://www.npmjs.com/) o [yarn](https://yarnpkg.com/)
+- [Angular CLI](https://angular.dev/cli) globalmente instalado
+
+```bash
+npm install -g @angular/cli
+```
+
+## 🔧 Instalación
+
+1. **Clona el repositorio**
+   ```bash
+   git clone https://github.com/osweld/onlychat-frontend.git
+   cd onlychat-frontend
+   ```
+
+2. **Instala las dependencias**
+   ```bash
+   npm install
+   ```
+
+3. **Configura las variables de entorno**
+   ```bash
+   cp src/environments/environment.example.ts src/environments/environment.ts
+   ```
+   Edita el archivo `environment.ts` con tus configuraciones.
+
+## 🚀 Uso
+
+### Servidor de desarrollo
+
+Para iniciar el servidor de desarrollo:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+La aplicación estará disponible en `http://localhost:4200/`. La aplicación se recargará automáticamente cuando modifiques los archivos fuente.
 
-## Code scaffolding
+### Construcción para producción
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+Para construir el proyecto para producción:
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Los archivos de construcción se almacenarán en el directorio `dist/`. Por defecto, la construcción de producción optimiza tu aplicación para rendimiento y velocidad.
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Para construcción con configuración específica:
 
 ```bash
-ng test
+ng build --configuration production
 ```
 
-## Running end-to-end tests
+## 🔧 Configuración
 
-For end-to-end (e2e) testing, run:
+### Variables de entorno
 
-```bash
-ng e2e
+Crea y configura los archivos de entorno:
+
+- `src/environments/environment.ts` - Desarrollo
+- `src/environments/environment.prod.ts` - Producción
+
+Ejemplo de configuración:
+
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'http://url/api',
+  wsUrl: 'ws://url',
+  appName: 'OnlyChat'
+};
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## 🤝 Contribución
 
-## Additional Resources
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+
+## 👨‍💻 Autor
+
+**German Reyes** - [@osweld](https://github.com/osweld)
+
+---
+
+⭐ ¡¡Dale una estrella si te ha gustado el proyecto!
