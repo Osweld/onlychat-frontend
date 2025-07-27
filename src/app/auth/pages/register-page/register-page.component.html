@@ -1,0 +1,157 @@
+<section class="min-h-screen w-full">
+  <div class="flex flex-col md:flex-row min-h-screen">
+    <div class="hidden md:block md:w-1/2 lg:w-3/5 relative shadow-2xl">
+      <div
+        class="absolute inset-0 bg-gradient-to-bl from-green-200 via-emerald-400 to-teal-600"
+      ></div>
+      <div class="absolute bottom-5 left-5 text-white p-4">
+        <h1 class="text-6xl lg:text-8xl font-bold mb-4">OnlyChat</h1>
+        <p class="text-xl lg:text-2xl font-medium">
+          Connect with friends and family through instant messaging in a secure
+          environment.
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="w-full md:w-1/2 flex flex-col justify-center items-center px-4 py-8 md:px-8 lg:px-12"
+    >
+      <div class="md:hidden mb-8 text-center">
+        <h1 class="text-3xl font-bold text-emerald-600">OnlyChat</h1>
+        <p class="text-gray-600 mt-2">Connect and chat instantly</p>
+      </div>
+
+      <div class="w-full max-w-lg">
+        <h2 class="text-4xl md:text-4xl font-bold mb-6 text-primary text-center ">
+          Create Account
+        </h2>
+
+        <p-card styleClass="shadow-xl overflow-hidden md:w-4/5 flex flex-col mx-auto">
+          <form
+            class="space-y-5"
+            [formGroup]="registerForm"
+            (ngSubmit)="onSubmit()"
+          >
+            <div class="px-5">
+              <label for="username" class="block font-medium">Username:</label>
+              <input
+                type="text"
+                id="username"
+                pSize="small"
+                pInputText
+                formControlName="username"
+                class="w-full mt-1"
+              />
+              @for(validation of registerFormValidationMessages.username; track
+              $index){
+              @if(registerForm.get('username')?.hasError(validation.type) &&
+              (registerForm.get('username')?.dirty ||
+              registerForm.get('username')?.touched)){
+              <p-message
+                size="small"
+                severity="error"
+                variant="simple"
+                text="{{ validation.message }}"
+              ></p-message>
+              } }
+            </div>
+
+            <div class="px-5">
+              <label for="email" class="block font-medium">Email:</label>
+              <input
+                type="text"
+                id="email"
+                pSize="small"
+                pInputText
+                formControlName="email"
+                class="w-full mt-1"
+              />
+              @for(validation of registerFormValidationMessages.email; track
+              $index){
+              @if(registerForm.get('email')?.hasError(validation.type) &&
+              (registerForm.get('email')?.dirty ||
+              registerForm.get('email')?.touched)){
+              <p-message
+                size="small"
+                severity="error"
+                variant="simple"
+                text="{{ validation.message }}"
+              ></p-message>
+              } }
+            </div>
+
+            <div class="px-5">
+              <label for="password" class="block font-medium">Password:</label>
+              <p-password
+                id="password"
+                size="small"
+                formControlName="password"
+                styleClass="w-full mt-1"
+                [fluid]="true"
+                [toggleMask]="true"
+              />
+              @for(validation of registerFormValidationMessages.password; track
+              $index){
+              @if(registerForm.get('password')?.hasError(validation.type) &&
+              (registerForm.get('password')?.dirty ||
+              registerForm.get('password')?.touched)){
+              <p-message
+                size="small"
+                severity="error"
+                variant="simple"
+                text="{{ validation.message }}"
+              ></p-message>
+              } }
+            </div>
+
+            <div class="px-5">
+              <label for="comfirmPassword" class="block font-medium">Confirm Password:</label>
+              <p-password
+                id="confirmPassword"
+                size="small"
+                formControlName="confirmPassword"
+                styleClass="w-full mt-1"
+                [fluid]="true"
+                [toggleMask]="true"
+                [feedback]="false"
+              />
+              @for(validation of registerFormValidationMessages.confirmPassword; track
+              $index){
+              @if(registerForm.get('confirmPassword')?.hasError(validation.type) &&
+              (registerForm.get('confirmPassword')?.dirty ||
+              registerForm.get('confirmPassword')?.touched)){
+              <p-message
+                size="small"
+                severity="error"
+                variant="simple"
+                text="{{ validation.message }}"
+              ></p-message>
+              } }
+            </div>
+
+            <div class="px-5">
+              <p-button
+                type="submit"
+                [loading]="registerLoading()"
+                [disabled]="registerLoading()"
+                label="Sign Up"
+                styleClass="w-full p-button-raised p-button-primary my-3"
+              ></p-button>
+            </div>
+          </form>
+          <div class="px-10">
+            <p-divider></p-divider>
+          </div>
+
+          <div class="px-5 text-center">
+            <p-button
+              label="Already have an account?"
+              styleClass="p-button-text w-full" 
+              routerLink="/login"
+            ></p-button>
+          </div>
+        </p-card>
+      </div>
+    </div>
+  </div>
+</section>

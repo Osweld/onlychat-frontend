@@ -1,0 +1,30 @@
+<p-dialog header="Forgot Password"  [modal]="true" [(visible)]="visible" (onHide)="closeDialog()" [style]="{ width: '25rem' }">
+    <div class="text-center mb-6">
+        <div class="text-emerald-600 mb-3">
+          <i class="pi pi-envelope text-4xl"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-1">Activate Account </h3>
+        <p class="text-gray-400 text-sm">
+            Please enter your email address to receive a new activation link. If you do not receive the email, please check your spam folder.
+        </p>
+      </div>
+
+      <div>
+        <form class="space-y-5" [formGroup]="resendEmailForm" (ngSubmit)="onSubmit()">
+            <div class="px-5">
+                <label for="email" class="block font-medium">Email:</label>
+                <input type="text" id="email" pInputText formControlName="email" class="w-full mt-1" />
+                  @for(validation of resendEmailFormValidationMessages.email; track $index){
+                    @if(resendEmailForm.get('email')?.hasError(validation.type) && (resendEmailForm.get('email')?.dirty)){
+                     <p-message size="small" severity="error" variant="simple" text="{{validation.message}}"></p-message>
+                    }
+                  }
+                    
+            </div>
+
+            <div class="px-5">
+                <p-button type="submit" [loading]="resendEmailLoading()" [disabled]="resendEmailLoading()"  label="Send Activation Accout Link" styleClass="w-full p-button-raised p-button-primary"></p-button>
+            </div>
+        </form>
+      </div>
+</p-dialog>

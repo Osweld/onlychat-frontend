@@ -1,0 +1,64 @@
+<header class="w-full flex justify-center md:justify-between items-center px-10 py-5 h-20">
+    <div>
+        <h3 class="text-4xl lg:text-5xl font-bold text-primary">OnlyChat</h3>
+    </div>
+    <nav class="hidden md:inline-block">
+        <div class="flex gap-4 ml-4 items-center">
+            <p-button icon="pi pi-user" severity="secondary" routerLink="/chat"/>
+        </div>
+    </nav>
+</header>
+<section>
+    <div class="flex flex-col justify-center items-center gap-4 w-full px-3 md:px-0">
+        <h3 class="text-3xl font-bold text-primary mb-8">Configuration</h3>
+        <p-card styleClass="shadow-xl overflow-hidden" class="w-full md:w-1/4">
+            <h3 class="text-2xl font-bold text-primary mb-4 text-center">Change password</h3>
+            <form class="space-y-5" [formGroup]="changePasswordForm" (ngSubmit)="onSubmit()">
+                <div class="px-5">
+                    <label for="password" class="block font-medium">Old password:</label>
+                    <p-password id="password" size="small" formControlName="oldPassword" styleClass="w-full mt-1" [fluid]="true"
+                        [toggleMask]="true" [feedback]="false"/>
+                    @for(validation of changePasswordFormValidationMessages.oldPassword; track
+                    $index){
+                    @if(changePasswordForm.get('oldPassword')?.hasError(validation.type) &&
+                    (changePasswordForm.get('oldPassword')?.dirty ||
+                    changePasswordForm.get('oldPassword')?.touched)){
+                    <p-message size="small" severity="error" variant="simple" text="{{ validation.message }}"></p-message>
+                    } }
+                </div>
+
+                <div class="px-5">
+                    <label for="password" class="block font-medium">New password:</label>
+                    <p-password id="password" size="small" formControlName="password" styleClass="w-full mt-1" [fluid]="true"
+                        [toggleMask]="true" />
+                    @for(validation of changePasswordFormValidationMessages.password; track
+                    $index){
+                    @if(changePasswordForm.get('newPassword')?.hasError(validation.type) &&
+                    (changePasswordForm.get('newPassword')?.dirty ||
+                    changePasswordForm.get('newPassword')?.touched)){
+                    <p-message size="small" severity="error" variant="simple" text="{{ validation.message }}"></p-message>
+                    } }
+                </div>
+        
+                <div class="px-5">
+                    <label for="comfirmPassword" class="block font-medium">Confirm Password:</label>
+                    <p-password id="confirmPassword" size="small" formControlName="confirmPassword" styleClass="w-full mt-1"
+                        [fluid]="true" [toggleMask]="true" [feedback]="false" />
+                    @for(validation of changePasswordFormValidationMessages.confirmPassword; track
+                    $index){
+                    @if(changePasswordForm.get('confirmPassword')?.hasError(validation.type) &&
+                    (changePasswordForm.get('confirmPassword')?.dirty ||
+                    changePasswordForm.get('confirmPassword')?.touched)){
+                    <p-message size="small" severity="error" variant="simple" text="{{ validation.message }}"></p-message>
+                    } }
+                </div>
+        
+                <div class="px-5">
+                    <p-button type="submit" [loading]="loadingChangePassword()" [disabled]="loadingChangePassword()"
+                        label="Reset Password"
+                        styleClass="w-full p-button-raised p-button-primary my-3"></p-button>
+                </div>
+            </form>
+        </p-card>
+    </div>
+</section>

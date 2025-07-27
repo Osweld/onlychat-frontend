@@ -1,0 +1,127 @@
+<section class="min-h-screen w-full">
+  <app-forgot-password-dialog [(visible)]="showForgotPassword" />
+
+  <app-resend-account-activation-dialog [(visible)]="showActivateAccount" />
+
+  <div class="flex flex-col md:flex-row min-h-screen">
+    <div class="hidden md:block md:w-1/2 lg:w-3/5 relative shadow-2xl">
+      <div
+        class="absolute inset-0 bg-gradient-to-bl from-green-200 via-emerald-400 to-teal-600"
+      ></div>
+      <div class="absolute bottom-5 left-5 text-white p-4">
+        <h1 class="text-6xl lg:text-8xl font-bold mb-4">OnlyChat</h1>
+        <p class="text-xl lg:text-2xl font-medium">
+          Connect with friends and family through instant messaging in a secure
+          environment.
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="w-full md:w-1/2 flex flex-col justify-center items-center px-4 py-8 md:px-8 lg:px-12"
+    >
+      <div class="md:hidden mb-8 text-center">
+        <h1 class="text-5xl font-bold text-primary">OnlyChat</h1>
+        <p class="text-gray-200 mt-2">Connect and chat instantly</p>
+      </div>
+
+      <div class="w-full max-w-lg">
+        <h2
+          class="text-4xl md:text-4xl font-bold mb-6 text-primary text-center"
+        >
+          Welcome Back
+        </h2>
+
+        <p-card
+          styleClass="shadow-xl border-0 overflow-hidden  md:w-4/5 flex flex-col mx-auto"
+        >
+          <form
+            class="space-y-5"
+            [formGroup]="loginForm"
+            (ngSubmit)="onSubmit()"
+          >
+            <div class="px-5">
+              <label for="username" class="block font-medium">Username:</label>
+              <input
+                type="text"
+                pSize="small"
+                id="username"
+                pInputText
+                formControlName="username"
+                class="w-full mt-1"
+              />
+              @for(validation of loginFormValidationMessages.username; track
+              $index){ @if(loginForm.get('username')?.hasError(validation.type)
+              && (loginForm.get('username')?.dirty ||
+              loginForm.get('username')?.touched)){
+              <p-message
+                size="small"
+                severity="error"
+                variant="simple"
+                text="{{ validation.message }}"
+              ></p-message>
+              } }
+            </div>
+
+            <div class="px-5">
+              <label for="password" class="block font-medium">Password:</label>
+              <input
+                type="password"
+                pSize="small"
+                id="password"
+                pInputText
+                formControlName="password"
+                class="w-full mt-1"
+              />
+              <div>
+                @for(validation of loginFormValidationMessages.password; track
+                $index){
+                @if(loginForm.get('password')?.hasError(validation.type) &&
+                (loginForm.get('password')?.dirty ||
+                loginForm.get('password')?.touched)){
+                <p-message
+                  size="small"
+                  severity="error"
+                  variant="simple"
+                  text="{{ validation.message }}"
+                ></p-message>
+                } }
+              </div>
+            </div>
+
+            <div class="px-5">
+              <p-button
+                type="submit"
+                [loading]="loginLoading()"
+                [disabled]="loginLoading()"
+                label="Sign In"
+                styleClass="w-full p-button-raised p-button-primary"
+              ></p-button>
+            </div>
+          </form>
+
+          <div class="px-5 mt-3 text-center">
+            <p-button
+              label="Forgot password?"
+              variant="text"
+              severity="secondary"
+              size="small"
+              (onClick)="showForgotPasswordDialog()"
+            />
+          </div>
+          <div class="px-10">
+            <p-divider></p-divider>
+          </div>
+
+          <div class="px-5 text-center">
+            <p-button
+              label="Create Account"
+              styleClass="p-button-text w-full"
+              routerLink="/register"
+            ></p-button>
+          </div>
+        </p-card>
+      </div>
+    </div>
+  </div>
+</section>
